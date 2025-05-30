@@ -1,13 +1,10 @@
 "use client";
 
-import FilmCardFull from "@/components/card/FilmCardFull";
-import FilmCard from "@/components/card/FilmCardSmall";
+import LoadingCard from "@/components/card/LoadingCard";
 import { Input } from "@/components/ui/input";
 import { Film } from "@/types/film";
 import { useEffect, useMemo, useState } from "react";
 import useFetchFilms from "./hooks/useFetchFilms";
-import GenresSelector from "./ui/GenresSelector";
-import LoadingCard from "@/components/card/LoadingCard";
 import FilmsList from "./ui/FilmsList";
 
 const FilmSearch = () => {
@@ -36,6 +33,7 @@ const FilmSearch = () => {
         placeholder="Search by Film Name"
         onChange={(e) => setSearchText(e.target.value)}
       />
+
       {isPending && <LoadingCard className="mt-4" />}
 
       {!isPending && (
