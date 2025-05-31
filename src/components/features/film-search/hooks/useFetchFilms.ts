@@ -1,7 +1,6 @@
 import searchFilmsByName from "@/api/searchFilmsByName";
 import { useDebounceValue } from "@/hooks/useDebounceValue";
 import { Film } from "@/types/film";
-import { set } from "internal-slot";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 
