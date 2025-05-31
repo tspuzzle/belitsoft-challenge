@@ -46,8 +46,7 @@ const useFetchFilms = () => {
 
     startTransition(async () => {
       const { films, agregatedGenres } = await searchFilmsByName(
-        debouncedSearchText,
-        signal
+        debouncedSearchText
       );
       if (signal.aborted) return;
       setFilmState({ films, agregatedGenres });
