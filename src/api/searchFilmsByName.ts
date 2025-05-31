@@ -2,11 +2,12 @@
 import { Film } from "@/types/film";
 
 const searchFilmsByName = async (
-  textSearch: string
+  textSearch: string,
+  abortSignal?: AbortSignal | undefined
 ): Promise<{ films: Film[]; agregatedGenres: string[] }> => {
   const response = await fetch(
     `https://api.tvmaze.com/search/shows?q=${textSearch}`,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 3600 }, signal: abortSignal }
   );
   const data = await response.json();
 

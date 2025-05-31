@@ -1,6 +1,7 @@
 import searchFilmsByName from "@/api/searchFilmsByName";
 import { useDebounceValue } from "@/hooks/useDebounceValue";
 import { Film } from "@/types/film";
+import { set } from "internal-slot";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 
@@ -25,19 +26,37 @@ const useFetchFilms = () => {
   };
 
   const debouncedSearchText = useDebounceValue(searchText, 500);
-  const [films, setFilms] = useState<Film[]>([]);
-  const [agregatedGenres, setAgregatedGenres] = useState<string[]>([]);
+
+  const [{ films, agregatedGenres }, setFilmState] = useState<{
+    films: Film[];
+    agregatedGenres: string[];
+  }>({
+    films: [],
+    agregatedGenres: [],
+  });
 
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
+    if (debouncedSearchText.trim() === "") {
+      setFilmState({ films: [], agregatedGenres: [] });
+      return;
+    }
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     startTransition(async () => {
       const { films, agregatedGenres } = await searchFilmsByName(
-        debouncedSearchText
+        debouncedSearchText,
+        signal
       );
-      setAgregatedGenres(agregatedGenres);
-      setFilms(films);
+      if (signal.aborted) return;
+      setFilmState({ films, agregatedGenres });
     });
+
+    return () => {
+      controller.abort();
+    };
   }, [debouncedSearchText]);
 
   return {
